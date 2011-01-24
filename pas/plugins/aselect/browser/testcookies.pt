@@ -1,0 +1,58 @@
+<html tal:define="msg view/update;
+                  pps context/@@plone_portal_state">
+  <head>
+    <title>Set testcookies for testing the A-Select PAS plugin</title>
+  </head>
+  <body style="width: 600px;">
+    <div tal:condition="msg" tal:content="msg">
+    </div>
+    <h1>Test the A-Select cookies.</h1>
+    <h2>Current member info</h2>
+    <p tal:condition="pps/anonymous">
+      You are anonymous.
+    </p>
+    <div tal:define="member pps/member"
+         tal:condition="not:pps/anonymous">
+      You are a member
+      <br />
+      Fullname: <span tal:content="python:member.getProperty('fullname')" />
+      <br />
+      E-mail: <span tal:content="python:member.getProperty('email')" />
+      <br />
+      User id: <span tal:content="member/getUserId|member/id|string:unknown" />
+      <br />
+      Login name: <span tal:content="member/getUserName|string:unknown" />
+      <br />
+
+    </div>
+    <h2>Set values for the <tal:cookie content="view/cookiename" /> cookie</h2>
+    <p tal:condition="not:view/update_authenticated_user">
+      Note that changes here only take effect when you logout first,
+      that is when the __ac cookie is removed.  There is a button at
+      the end of the form to clear the aselectattributes cookie.  Note
+      that clearing the __ac cookie has no effect if you still have an
+      aselect cookie, so this option is not offered.  If you want to
+      remove the __ac session cookie, you have to use what your
+      browser offers you for that (e.g. the Firefox Developer Toolbar)
+      or quit and restart your browser.
+    </p>
+    <p>
+      Note that when you first submit this form, you are still
+      anonymous.  But the aselect cookie will have been set, so during
+      the next request you will be logged in.
+    </p>
+    <form tal:attributes="action string:${context/absolute_url}/@@testcookies" method="post">
+      <div style="margin-bottom:1em"
+           tal:repeat="field view/attributes">
+        <div>
+          <label tal:content="field" />:
+        </div>
+        <input type="text"
+               tal:attributes="name field;
+                               value python:view.value_for(field);" />
+      </div>
+      <input type="submit" name="submit" value="Submit" />
+      <input type="submit" name="clearcookies" value="Clear aselect cookie" />
+    </form>
+  </body>
+</html>

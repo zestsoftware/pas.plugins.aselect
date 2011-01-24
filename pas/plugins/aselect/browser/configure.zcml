@@ -1,0 +1,24 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+  <!-- NOTE: you need to make sure in your Apache A-Select plugin
+       configuration that this (@@)testcookies page is 'protected' by
+       the A-Select server, otherwise someone could abuse this test
+       page to get access. -->
+  <browser:page
+      name="testcookies"
+      template="testcookies.pt"
+      for="Products.CMFCore.interfaces.ISiteRoot"
+      permission="zope.Public"
+      class=".test.TestCookiesView"
+      />
+
+  <browser:page
+      name="aselect-login"
+      for="Products.CMFCore.interfaces.ISiteRoot"
+      permission="zope.Public"
+      class=".aselect.RedirectView"
+      />
+
+</configure>

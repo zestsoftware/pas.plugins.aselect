@@ -1,0 +1,14 @@
+<h1 tal:replace="structure here/manage_page_header">Header</h1>
+<h2 tal:replace="structure here/manage_tabs"> TABS </h2>
+
+<h2 tal:define="form_title string:Configure A-Select PAS"
+    tal:replace="structure here/manage_form_title">Form Title</h2>
+
+<p class="form-help">
+Add a A-Select PAS.
+</p>
+<p class="form-help">
+Any request from Apache with the correct cookie headers will be authenticated.
+</p>
+
+<h1 tal:replace="structure here/manage_page_footer">Footer</h1>

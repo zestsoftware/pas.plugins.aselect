@@ -1,0 +1,27 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="pas.plugins.aselect">
+
+    <five:registerPackage package="." initialize=".initialize" />
+    <i18n:registerTranslations directory="locales" />
+
+    <gs:registerProfile
+        name="default"
+        title="A-Select PAS plugin"
+        description="Profile for adding an A-Select PAS plugin."
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        />
+
+    <gs:importStep
+        name="pas.plugins.aselect"
+        title="Special import handlers for pas.plugins.aselect"
+        description=""
+        handler="pas.plugins.aselect.setuphandlers.import_various" />
+
+    <include package=".browser" />
+
+</configure>

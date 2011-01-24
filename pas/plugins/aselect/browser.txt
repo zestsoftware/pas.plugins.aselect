@@ -1,0 +1,136 @@
+In-browser login tests
+======================
+
+We test the login behaviour of the aselectpas plugin in this functional
+test file. We'll test the regular plone login (which should still work) and
+the A-Select cookie-based login.
+
+We start out by setting up our mock browser.
+
+    >>> from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+    >>> browser.handleErrors = False
+    >>> portal_url = self.portal.absolute_url()
+
+And we need a group to match the nlEduPersonHomeOrganizationId (or
+config.GROUP_ATTRIBUTE) attribute that we will be setting:
+
+    >>> self.portal.portal_groups.addGroup('zest')
+    True
+
+
+Logging in as a regular admin user
+----------------------------------
+
+Next we log into the site as a user with privileges to create content.
+
+    >>> browser.open(portal_url + '/login_form')
+    >>> from Products.PloneTestCase import setup
+    >>> browser.getControl(name='__ac_name').value=setup.portal_owner
+    >>> browser.getControl(name='__ac_password').value=setup.default_password
+    >>> browser.getControl('Log in').click()
+    >>> 'You are now logged in' in browser.contents
+    True
+
+We'll log out again.
+
+    >>> browser.open(portal_url + '/logout')
+    >>> print browser.contents
+    <!DOCTYPE html...
+    ...You are now logged out...
+    ...</html>
+
+
+Redirect on the @@aselect-login page
+------------------------------------
+
+When you go to the @@aselect-login page, you get redirected to the
+Plone Site root and you get a message that you are now logged in.  In
+a test setup without real access to the A-Select server this makes no
+sense.  But when you have configured Apache to talk to the A-Select
+server when someone visits the (@@)aselect-login page, then it makes
+all kinds of sense.  You only get redirected when login has succeeded.
+That is tested a bit further on.  Here we only test that the status
+message that is displayed confirms that we are not actually logged
+in.
+
+    >>> browser.open(portal_url + '/@@aselect-login')
+    >>> browser.url == portal_url + '/@@aselect-login'
+    True
+    >>> 'Login failed' in browser.contents
+    True
+
+Open it the Plone Site root again.
+
+    >>> browser.open(portal_url)
+    >>> 'You are now logged in' in browser.contents
+    False
+
+
+
+Logging in as A-Select user
+---------------------------
+
+We have a handy view that mimicks setting cookies. We use that to log
+in as user with id maurits@zestsoftware.
+
+    >>> portal.portal_membership.getMemberById('maurits@zestsoftware') is None
+    True
+    >>> browser.open(portal_url + '/@@testcookies')
+    >>> browser.getControl(name='uid').value = 'not-used'
+    >>> browser.getControl(name='nlEduPersonRealId').value = 'maurits@zestsoftware'
+    >>> browser.getControl(name='givenName').value = 'Maurits'
+    >>> browser.getControl(name='nlEduPersonTussenvoegsels').value = 'van'
+    >>> browser.getControl(name='sn').value = 'Rees'
+    >>> browser.getControl(name='mail').value = 'm.van.rees@zestsoftware.nl'
+    >>> from pas.plugins.aselect import config
+    >>> browser.getControl(name=config.GROUP_ATTRIBUTE).value = 'zest'
+    >>> browser.getControl('Submit').click()
+
+At this moment, the page has made sure that an A-Select cookies has
+been set, but it only takes effect on the next request.  And since we
+have configured our plugin to only look for the cookie on certain
+URLs, nothing interesting happens yet when we visit the news page:
+
+    >>> browser.open(portal_url + '/news')
+    >>> 'Maurits van Rees' in browser.contents
+    False
+
+To trigger the credentials extraction and authentication, we can visit
+either the aselect-login or the testcookies page (with or without '@@'
+in the front):
+
+    >>> browser.open(portal_url + '/@@aselect-login')
+    >>> browser.url == portal_url
+    True
+    >>> 'Maurits van Rees' in browser.contents
+    True
+    >>> browser.open(portal_url + '/news')
+    >>> 'Maurits van Rees' in browser.contents
+    True
+
+The user has been created:
+
+    >>> portal.portal_membership.getMemberById('maurits@zestsoftware')
+    <MemberData at /plone/portal_memberdata/maurits@zestsoftware used for /plone/acl_users>
+
+Behind the scenes, we use plone sessions to store the user's login data. This
+is effective, as we don't have to check it on every request. We can show that
+by removing the cookies: we'll still be logged in.
+
+    >>> browser.open(portal_url + '/@@testcookies')
+    >>> browser.getControl('Clear aselect cookie').click()
+    >>> browser.open(portal_url + '/news')
+    >>> 'Maurits van Rees' in browser.contents
+    True
+
+We'll log out again.
+
+    >>> browser.open(portal_url + '/logout')
+    >>> print browser.contents
+    <!DOCTYPE html...
+    ...You are now logged out...
+    ...</html>
+    >>> browser.open(portal_url)
+    >>> 'Maurits van Rees' in browser.contents
+    False

@@ -1,0 +1,9 @@
+Credits
+=======
+
+- Guido Wesdorp
+- Joris Slob
+- Maurits van Rees
+- Reinout van Rees
+
+Icon was taken from http://www.famfamfam.com/lab/icons/

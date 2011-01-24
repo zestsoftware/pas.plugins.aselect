@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="pas.plugins.aselect">
+
+<body>
+<metal:main fill-slot="main">
+  <div tal:condition="view/show_group_options">
+    <h2 i18n:translate="heading_which_school">Which school do you belong to?</h2>
+    <br/>
+    <form method="post">
+      <div class="formControls">
+        <tal:group repeat="group_id view/possible_group_ids">
+          <input class="context"
+                 type="submit"
+                 name="preferred_group_id"
+                 tal:attributes="value group_id"
+                 />
+        </tal:group>
+      </div>
+    </form>
+  </div>
+</metal:main>
+</body>
+</html>
