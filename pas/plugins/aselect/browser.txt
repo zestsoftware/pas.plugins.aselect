@@ -7,7 +7,11 @@ the A-Select cookie-based login.
 
 We start out by setting up our mock browser.
 
-    >>> from Products.Five.testbrowser import Browser
+    >>> try:
+    ...     from Testing.testbrowser import Browser
+    ... except ImportError:
+    ...     # BBB for Plone 3, Zope 2.10
+    ...     from Products.Five.testbrowser import Browser
     >>> browser = Browser()
     >>> browser.handleErrors = False
     >>> portal_url = self.portal.absolute_url()

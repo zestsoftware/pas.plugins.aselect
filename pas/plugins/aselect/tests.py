@@ -1,7 +1,12 @@
 import unittest
 
 from Products.Five import fiveconfigure
-from Products.Five import zcml
+try:
+    from Zope2.App import zcml
+except ImportError:
+    # BBB for Plone 3, Zope 2.10
+    from Products.Five import zcml
+
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import onsetup
 from Testing import ZopeTestCase as ztc
