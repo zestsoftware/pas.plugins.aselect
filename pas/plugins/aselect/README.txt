@@ -366,11 +366,9 @@ least once) and now also UPDATE_EXISTING_USERS, so we change those
 settings here:
 
     >>> from pas.plugins.aselect import config
-    >>> config.UPDATE_AUTHENTICATED_USER
-    True
+    >>> orig_UPDATE_AUTHENTICATED_USER = config.UPDATE_AUTHENTICATED_USER
+    >>> orig_UPDATE_EXISTING_USERS = config.UPDATE_EXISTING_USERS
     >>> config.UPDATE_AUTHENTICATED_USER = False
-    >>> config.UPDATE_EXISTING_USERS
-    False
     >>> config.UPDATE_EXISTING_USERS = True
     >>> credentials['fullname'] = 'My second name'
     >>> plugin.authenticateCredentials(credentials)
@@ -395,8 +393,8 @@ settings here:
 
 Restore config settings:
 
-    >>> config.UPDATE_AUTHENTICATED_USER = True
-    >>> config.UPDATE_EXISTING_USERS = False
+    >>> config.UPDATE_AUTHENTICATED_USER = orig_UPDATE_AUTHENTICATED_USER
+    >>> config.UPDATE_EXISTING_USERS = orig_UPDATE_EXISTING_USERS
 
 
 Group extraction
@@ -452,8 +450,7 @@ added to another group and we do not want to stomp on that.
 
 For the next tests we change the default config again:
 
-    >>> config.UPDATE_EXISTING_USERS
-    False
+    >>> orig_UPDATE_EXISTING_USERS = config.UPDATE_EXISTING_USERS
     >>> config.UPDATE_EXISTING_USERS = True
 
 We make sure that users can not be made Administrator; in fact, by
@@ -527,4 +524,4 @@ Restore the overriden method:
 
 And restore the config setting:
 
-    >>> config.UPDATE_EXISTING_USERS = False
+    >>> config.UPDATE_EXISTING_USERS = orig_UPDATE_EXISTING_USERS
