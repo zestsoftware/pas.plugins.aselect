@@ -5,7 +5,9 @@ Changelog for pas.plugins.aselect
 1.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Made tests a bit less likely to fail when config defaults have
+  changed (like in a monkey patch in a client package).
+  [maurits]
 
 
 1.3 (2011-01-24)
