@@ -2,7 +2,7 @@ Changelog for pas.plugins.aselect
 =================================
 
 
-1.4 (unreleased)
+1.4 (2011-08-22)
 ----------------
 
 - Made tests a bit less likely to fail when config defaults have
