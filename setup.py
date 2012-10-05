@@ -13,7 +13,7 @@ version = '1.5dev'
 
 long_description = (
     '.. contents::\n\n' +
-    read('CHANGES.txt')
+    read('CHANGES.rst')
     + '\n\n' +
     read('README.txt')
     + '\n\n' +
