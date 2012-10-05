@@ -5,7 +5,8 @@ Changelog for pas.plugins.aselect
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Moved to https://github.com/zestsoftware/pas.plugins.aselect
+  [maurits]
 
 
 1.4 (2011-08-22)
