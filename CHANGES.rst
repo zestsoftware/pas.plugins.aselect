@@ -2,7 +2,7 @@ Changelog for pas.plugins.aselect
 =================================
 
 
-1.5 (unreleased)
+1.5 (2012-10-14)
 ----------------
 
 - Moved to https://github.com/zestsoftware/pas.plugins.aselect
